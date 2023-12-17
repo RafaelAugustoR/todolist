@@ -1,23 +1,30 @@
 package com.todolist.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity (name = "tb_tasks")
-public class Task {
+public class Task implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long idUser;
-    private String description;
 
-    @Column(length = 50)
+    @Column(nullable = false, length = 50)
     private String title;
+
+    private String description;
     private String priority;
 
     private LocalDateTime startData;
@@ -29,6 +36,11 @@ public class Task {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    @JsonIgnore
+    private Category category;
 
     public void setTitle(String title) throws Exception{
         if(title.length() > 50){
