@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
-
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Entity(name = "tb_category")
 public class Category implements Serializable {
 
     @Id
