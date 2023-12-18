@@ -38,7 +38,7 @@ public class Task implements Serializable {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     @JsonIgnore
     private Category category;
 
