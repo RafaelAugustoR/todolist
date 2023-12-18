@@ -23,17 +23,19 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Transactional
     public UserDTO save(UserDTO user) {
         List<String> errors = UserValidator.validateUser(user);
         if (!errors.isEmpty()) {
             log.error("User is not valid {}", user);
         }
+        User existingUser = userRepository.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            throw new InvalidEntityException("User already exists", ErrorCodes.USER_ALREADY_EXISTS);
+        }
         User savedUser = userRepository.save(UserDTO.toEntity(user));
         return UserDTO.fromEntity(savedUser);
     }
-
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
