@@ -36,8 +36,6 @@ public class UserDTO {
 
     public static User toEntity(UserDTO userDTO) {
         final User user = new User();
-
-        user.setId(userDTO.getId());
         user.setName(userDTO.getName());
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
@@ -45,20 +43,22 @@ public class UserDTO {
         user.setCategory(
                 userDTO.getCategory() != null ? userDTO.getCategory().stream().map(CategoryDTO::toEntity).collect(Collectors.toList()) : null
         );
+
         return user;
     }
+
     public static UserDTO fromEntity(User user) {
         return UserDTO.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .username(user.getUsername())
-                .password(user.getPassword())
                 .email(user.getEmail())
                 .category(
                         user.getCategory() != null ? user.getCategory().stream().map(CategoryDTO::fromEntity).collect(Collectors.toList()) : null
                 )
                 .build();
     }
+
 
 
 }

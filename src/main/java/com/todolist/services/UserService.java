@@ -2,6 +2,7 @@ package com.todolist.services;
 
 
 import com.todolist.dtos.UserDTO;
+import com.todolist.entities.User;
 import com.todolist.errors.ErrorCodes;
 import com.todolist.errors.InvalidEntityException;
 import com.todolist.errors.NotFoundException;
@@ -10,6 +11,7 @@ import com.todolist.validators.UserValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +24,16 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public UserDTO save(UserDTO user) {
         List<String> errors = UserValidator.validateUser(user);
         if (!errors.isEmpty()) {
             log.error("User is not valid {}", user);
         }
-        return UserDTO.fromEntity(userRepository.save(UserDTO.toEntity(user)));
+        User savedUser = userRepository.save(UserDTO.toEntity(user));
+        return UserDTO.fromEntity(savedUser);
     }
+
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
