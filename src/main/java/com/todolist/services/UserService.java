@@ -1,6 +1,7 @@
 package com.todolist.services;
 
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.todolist.dtos.UserDTO;
 import com.todolist.entities.User;
 import com.todolist.errors.ErrorCodes;
@@ -23,17 +24,24 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserValidator userValidator;
+
     @Transactional
     public UserDTO save(UserDTO user) {
-        List<String> errors = UserValidator.validateUser(user);
+        List<String> errors = userValidator.validateUser(user);
         if (!errors.isEmpty()) {
-            log.error("User is not valid {}", user);
+            throw new InvalidEntityException("User is not valid", (Throwable) errors);
         }
-        User existingUser = userRepository.findByUsername(user.getUsername());
-        if (existingUser != null) {
-            throw new InvalidEntityException("User already exists", ErrorCodes.USER_ALREADY_EXISTS);
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new InvalidEntityException("Username is already in use");
         }
+        String passwordHashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(passwordHashed);
+
         User savedUser = userRepository.save(UserDTO.toEntity(user));
+
         return UserDTO.fromEntity(savedUser);
     }
 
