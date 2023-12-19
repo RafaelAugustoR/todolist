@@ -1,12 +1,22 @@
 package com.todolist.validators;
 
 import com.todolist.dtos.UserDTO;
+import com.todolist.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class UserValidator {
+
+    @Autowired
+    static UserRepository userRepository;
+    public UserValidator(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public static List<String> validateUser(UserDTO user) {
         List<String> errors = new ArrayList<>();
@@ -24,13 +34,14 @@ public class UserValidator {
 
             if (StringUtils.isEmpty(user.getEmail()))
                 errors.add("Please fill the Email");
+            else if (userRepository.existsByEmail(user.getEmail())) // Check if email is already in use
+                errors.add("Email is already in use");
 
             if (StringUtils.isEmpty(user.getPassword()))
                 errors.add("Please fill the Password");
         }
         return errors;
     }
-
 
     public static List<String> validateUserCredentials(String email, String password) {
         List<String> errors = new ArrayList<>();
