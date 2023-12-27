@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,18 @@ public class TaskService {
             log.error("Task is not valid {}", taskDTO);
             throw new InvalidEntityException("Task is not valid", ErrorCodes.TASK_NOT_VALID, errors);
         }
-        return TaskDTO.fromEntity(taskRepository.save(TaskDTO.toEntity(taskDTO)));
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        if (currentDate.isAfter(taskDTO.getStartData()) || currentDate.isAfter(taskDTO.getEndData())) {
+            throw new InvalidEntityException("Invalid start/end date.", ErrorCodes.INVALID_DATE, List.of("Start/End date cannot be in the past."));
+        }
+
+        if (taskDTO.getStartData().isAfter(taskDTO.getEndData())) {
+            throw new InvalidEntityException("Invalid start/end date.", ErrorCodes.INVALID_DATE, List.of("Start date cannot be after End date."));
+        }
+
+        Task savedTask = taskRepository.save(TaskDTO.toEntity(taskDTO));
+        return TaskDTO.fromEntity(savedTask);
     }
 
     public List<TaskDTO> findAll() {
@@ -69,11 +81,12 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         if (id == null) {
             log.error("Task id is null");
-            return;
+            return false;
         }
         taskRepository.deleteById(id);
+        return false;
     }
 }
