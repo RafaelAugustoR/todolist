@@ -8,7 +8,7 @@ public enum ErrorCodes {
     USER_NOT_VALID(2000),
     CATEGORY_NOT_VALID(2001),
     TASK_NOT_VALID(2002),
-    ;
+    INVALID_DATE(3000);
 
     private int code;
 
