@@ -31,10 +31,12 @@ public class UserValidator {
 
             if (StringUtils.isEmpty(user.getUsername()))
                 errors.add("Please fill the Username");
+            else if (userRepository.existsByUsername(user.getUsername()))
+                errors.add("Username is already in use");
 
             if (StringUtils.isEmpty(user.getEmail()))
                 errors.add("Please fill the Email");
-            else if (userRepository.existsByEmail(user.getEmail())) // Check if email is already in use
+            else if (userRepository.existsByEmail(user.getEmail()))
                 errors.add("Email is already in use");
 
             if (StringUtils.isEmpty(user.getPassword()))
