@@ -3,7 +3,6 @@ package com.todolist.controllers;
 import com.todolist.dtos.UserDTO;
 import com.todolist.errors.NotFoundException;
 import com.todolist.services.UserService;
-import com.todolist.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +18,6 @@ public class UserController {
     UserService userService;
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
-        List<String> errors = UserValidator.validateUser(user);
-        if (!errors.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
         UserDTO savedUser = userService.save(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
