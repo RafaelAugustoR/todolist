@@ -22,9 +22,9 @@ public class UserController {
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO user) {
-            return new ResponseEntity<>(userService.save(user), HttpStatus.OK);
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long userId, @RequestBody UserDTO user) {
+            return new ResponseEntity<>(userService.updateUser(userId, user), HttpStatus.OK);
     }
 
     @GetMapping("/all")

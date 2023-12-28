@@ -12,13 +12,14 @@ import java.util.List;
 @Component
 public class UserValidator {
 
+
+    private final UserRepository userRepository;
     @Autowired
-    static UserRepository userRepository;
     public UserValidator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public static List<String> validateUser(UserDTO user) {
+    public List<String> validateUser(UserDTO user) {
         List<String> errors = new ArrayList<>();
         if (user == null) {
             errors.add("Please fill the name");
