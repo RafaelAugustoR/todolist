@@ -22,7 +22,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<CategoryDTO> createCategory(CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO categoryDTO) {
         return new ResponseEntity<>(categoryService.save(categoryDTO), HttpStatus.CREATED);
     }
 

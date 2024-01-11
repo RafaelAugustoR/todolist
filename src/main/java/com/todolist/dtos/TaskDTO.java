@@ -26,7 +26,6 @@ public class TaskDTO {
 
     private LocalDateTime updatedAt;
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private CategoryDTO category;
 
     public static Task toEntity(TaskDTO taskDTO) throws Exception {

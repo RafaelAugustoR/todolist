@@ -36,6 +36,7 @@ public class UserDTO {
 
     public static User toEntity(UserDTO userDTO) {
         final User user = new User();
+        user.setId(userDTO.getId());
         user.setName(userDTO.getName());
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
